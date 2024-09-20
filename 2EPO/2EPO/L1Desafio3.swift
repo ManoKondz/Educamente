@@ -3,7 +3,7 @@ import AVFoundation
 
 struct L1Desafio3: View {
     
-    @Binding var state: LessonState
+//    @Binding var state: LessonState
     
     @State private var selectedOption = ""
     @State private var navigateToNextScreen = false
@@ -116,24 +116,34 @@ struct L1Desafio3: View {
                 }
                 .padding()
             }
-            .onChange(of: navigateToNextScreen) { newValue in
-                if newValue {
-                    if !isCorrect {
-                        state.erradas.append(1)
-                    }
-                    
-                    if state.path.count >= 5 {
-                        if state.erradas.isEmpty {
-                            state.path.removeAll()
-                        } else {
-                            let first = state.erradas.removeFirst()
-                            state.path.append(first)
-                        }
-                    } else {
-                        state.path.append(4)
-                    }
-                }
-            }
+            
+            NavigationLink(value: navigateToNextScreen)
+                                {
+                                EmptyView()
+                            }
+                                .navigationDestination(isPresented:$navigateToNextScreen){
+                                    L1Desafio4()
+                                }
+
+            
+//            .onChange(of: navigateToNextScreen) { newValue in
+//                if newValue {
+//                    if !isCorrect {
+//                        state.erradas.append(1)
+//                    }
+//                    
+//                    if state.path.count >= 5 {
+//                        if state.erradas.isEmpty {
+//                            state.path.removeAll()
+//                        } else {
+//                            let first = state.erradas.removeFirst()
+//                            state.path.append(first)
+//                        }
+//                    } else {
+//                        state.path.append(4)
+//                    }
+//                }
+//            }
             .sheet(isPresented: $showingSheet) {
                 CustomSheetView(isCorrect: isCorrect, onDismiss: {
                     showingSheet = false
@@ -148,5 +158,5 @@ struct L1Desafio3: View {
 }
 
 #Preview {
-    L1Desafio3(state: .constant(.init()))
+    L1Desafio3()
 }

@@ -1,8 +1,8 @@
 import SwiftUI
 
-struct Licao2: View {
+struct  L1Desafio2: View {
     
-    @Binding var state: LessonState
+    //@Binding var state: LessonState
     
     @State private var words: [String] = ["Mões", "Universo", "Classes", "Pessoas", "Escolha", "Mãos", "Mundo", "Planeta", "Vidas"]
     @State private var showingPopup = false
@@ -18,7 +18,7 @@ struct Licao2: View {
     
     
     var body: some View {
-//        NavigationStack {
+        NavigationStack {
             ZStack {
                 Color.menu
                     .edgesIgnoringSafeArea(.all)
@@ -131,32 +131,32 @@ struct Licao2: View {
                     EmptyView()
                 }
                 .navigationDestination(isPresented: $navigateToNextScreen) {
-//                    Licao3() // Aqui você pode alterar para a próxima lição ou tela desejada
+                    L1Desafio3() // Aqui você pode alterar para a próxima lição ou tela desejada
                 }
             }
-            .onChange(of: navigateToNextScreen) { newValue in
-                if newValue {
-                    if isCorrect == false {
-                        state.erradas.append(1)
-                    }
-                    
-                    // VOLTAR PARA QUESTOES ERRADAS
-                    if state.path.count >= 5 {
-                        
-                        if state.erradas.isEmpty {
-                            state.path.removeAll()
-                        } else {
-                            // PEGA A PRIMEIRA LIÇÃO ERRADA E REMOVE DAS ERRADAS
-                            let first = state.erradas.removeFirst()
-                            state.path.append(first)
-                        }
-                    } else {
-                        // VAI PARA PROXIMA LICAO
-                        state.path.append(3)
-                    }
-                }
-            }
-//        }
+//            .onChange(of: navigateToNextScreen) { newValue in
+//                if newValue {
+//                    if isCorrect == false {
+//                        state.erradas.append(1)
+//                    }
+//                    
+//                    // VOLTAR PARA QUESTOES ERRADAS
+//                    if state.path.count >= 5 {
+//                        
+//                        if state.erradas.isEmpty {
+//                            state.path.removeAll()
+//                        } else {
+//                            // PEGA A PRIMEIRA LIÇÃO ERRADA E REMOVE DAS ERRADAS
+//                            let first = state.erradas.removeFirst()
+//                            state.path.append(first)
+//                        }
+//                    } else {
+//                        // VAI PARA PROXIMA LICAO
+//                        state.path.append(3)
+//                    }
+//                }
+//            }
+        }
     }
 
     // Função para verificar se as respostas estão corretas
@@ -231,5 +231,5 @@ struct Licao2: View {
 
 
 #Preview {
-    Licao2(state: .constant(.init()))
+    L1Desafio2()
 }

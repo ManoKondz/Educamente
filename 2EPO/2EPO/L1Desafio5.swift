@@ -3,7 +3,7 @@ import AVFoundation
 
 struct L1Desafio5: View {
     
-    @Binding var state: LessonState
+    //@Binding var state: LessonState
     
     @State private var showingPopup = false
     @State private var selectedOption = ""
@@ -136,27 +136,37 @@ struct L1Desafio5: View {
                         .presentationDetents([.fraction(0.25)]) // Ajusta a altura da sheet para 25% da tela
                         .background(Color.blue) // Define a cor de fundo da sheet
                     }
-                    .onChange(of: navigateToNextScreen) { newValue in
-                        if newValue {
-                            // ERROU
-                            if isCorrect == false {
-                                state.erradas.append(1)
-                            }
-                            
-                            // VOLTAR PARA QUESTOES ERRADAS
-                            if state.path.count >= 5 {
-                                
-                                if state.erradas.isEmpty {
-                                    state.path.removeAll()
-                                } else {
-                                    // PEGA A PRIMEIRA LIÇÃO ERRADA E REMOVE DAS ERRADAS
-                                    let first = state.erradas.removeFirst()
-                                    state.path.append(first)
-                                }
-                            }
-                            
-                        }
-                    }
+                    
+                    NavigationLink(value: navigateToNextScreen)
+                                        {
+                                        EmptyView()
+                                    }
+                                        .navigationDestination(isPresented:$navigateToNextScreen){
+                                            TrilhaView()
+                                        }
+
+                    
+//                    .onChange(of: navigateToNextScreen) { newValue in
+//                        if newValue {
+//                            // ERROU
+//                            if isCorrect == false {
+//                                state.erradas.append(1)
+//                            }
+//                            
+//                            // VOLTAR PARA QUESTOES ERRADAS
+//                            if state.path.count >= 5 {
+//                                
+//                                if state.erradas.isEmpty {
+//                                    state.path.removeAll()
+//                                } else {
+//                                    // PEGA A PRIMEIRA LIÇÃO ERRADA E REMOVE DAS ERRADAS
+//                                    let first = state.erradas.removeFirst()
+//                                    state.path.append(first)
+//                                }
+//                            }
+//                            
+//                        }
+//                    }
                     
                 }
             }
@@ -165,5 +175,5 @@ struct L1Desafio5: View {
 }
 
 #Preview {
-    L1Desafio5(state: .constant(.init()))
+    L1Desafio5()
 }

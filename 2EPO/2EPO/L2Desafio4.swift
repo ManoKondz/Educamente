@@ -9,7 +9,7 @@ import SwiftUI
 
 struct L2Desafio4: View {
     
-    @Binding var state: LessonState
+    //@Binding var state: LessonState
     
     @State private var showingPopup = false
     @State private var selectedOption = ""
@@ -144,28 +144,38 @@ struct L2Desafio4: View {
                         .background(Color.blue) // Define a cor de fundo da sheet
                     }
                     
-                    .onChange(of: navigateToNextScreen) { newValue in
-                        if newValue {
-                            if isCorrect == false {
-                                state.erradas.append(1)
-                            }
-                            
-                            // VOLTAR PARA QUESTOES ERRADAS
-                            if state.path.count >= 5 {
-                                
-                                if state.erradas.isEmpty {
-                                    state.path.removeAll()
-                                } else {
-                                    // PEGA A PRIMEIRA LIÇÃO ERRADA E REMOVE DAS ERRADAS
-                                    let first = state.erradas.removeFirst()
-                                    state.path.append(first)
-                                }
-                            } else {
-                                // VAI PARA PROXIMA LICAO
-                                state.path.append(2)
-                            }
-                        }
-                    }
+                    NavigationLink(value: navigateToNextScreen)
+                                        {
+                                        EmptyView()
+                                    }
+                                        .navigationDestination(isPresented:$navigateToNextScreen){
+                                            L2Desafio5()
+                                        }
+
+                    
+                    
+//                    .onChange(of: navigateToNextScreen) { newValue in
+//                        if newValue {
+//                            if isCorrect == false {
+//                                state.erradas.append(1)
+//                            }
+//                            
+//                            // VOLTAR PARA QUESTOES ERRADAS
+//                            if state.path.count >= 5 {
+//                                
+//                                if state.erradas.isEmpty {
+//                                    state.path.removeAll()
+//                                } else {
+//                                    // PEGA A PRIMEIRA LIÇÃO ERRADA E REMOVE DAS ERRADAS
+//                                    let first = state.erradas.removeFirst()
+//                                    state.path.append(first)
+//                                }
+//                            } else {
+//                                // VAI PARA PROXIMA LICAO
+//                                state.path.append(2)
+//                            }
+//                        }
+//                    }
                     
                 }
             }
@@ -231,5 +241,5 @@ struct CustomPopupView9: View {
     }
 }
 #Preview {
-    L2Desafio4(state: .constant(.init()))
+    L2Desafio4()
 }

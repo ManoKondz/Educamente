@@ -2,6 +2,7 @@ import SwiftUI
 
 
 struct CustomSheetView: View {
+    //@State private var navigateToNextScreen = false
     var isCorrect: Bool
     var onDismiss: () -> Void
     private let voiceSynthesizer = VoiceSynthesizer()
@@ -38,6 +39,7 @@ struct CustomSheetView: View {
             
             Button(action: {
                 onDismiss()
+                //navigateToNextScreen = true
             }) {
                 Image(systemName: "forward.fill")
                     .resizable()

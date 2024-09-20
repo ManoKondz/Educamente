@@ -4,20 +4,21 @@
 //
 //  Created by found on 21/05/24.
 //
+
 import SwiftUI
 
 struct TrilhaView: View {
     @State private var showingPopup = false
     @State private var selectedLesson = ""
-    
+    @State private var LicaoID = 0
+    @State private var lessonName: String = ""
     
     var body: some View {
         NavigationStack {
             ZStack {
-                
                 VStack(alignment: .leading) {
                     HStack() {
-                        Image(systemName:"person.circle")
+                        Image(systemName: "person.circle")
                             .resizable()
                             .aspectRatio(contentMode: .fill)
                             .frame(width: 50, height: 50)
@@ -51,7 +52,6 @@ struct TrilhaView: View {
                                                 .frame(width: 250, height: 20)
                                                 .rotationEffect(.degrees(index % 2 == 0 ? 35 : -35))
                                                 .zIndex(-1)
-                                            
                                         }
                                     } else {
                                         VStack {
@@ -80,8 +80,8 @@ struct TrilhaView: View {
                     }
                     .frame(maxHeight: .infinity)
                 }
-                
                 .background(Color.menu)
+                
                 if showingPopup {
                     LessonPopupView(lessonName: selectedLesson, isShowingPopup: $showingPopup)
                 }
@@ -136,13 +136,11 @@ struct CircleIconView: View {
             return "airplane"
         case 2:
             return "bus.fill"
-            // Adicionar mais cases conforme necessário
         default:
             return "circle.fill"
         }
     }
 }
-
 
 struct LessonState {
     var path = [Int]()
@@ -150,77 +148,83 @@ struct LessonState {
 }
 
 struct LessonPopupView: View {
-    
-    @State var state = LessonState()
+    @State private var LicaoID = 0
     
     var lessonName: String
     @Binding var isShowingPopup: Bool
     
     var body: some View {
-        NavigationStack(path: $state.path) {
-            VStack {
-                HStack {
-                    Button(action: {
-                        self.isShowingPopup = false
-                    }) {
-                        Image(systemName: "x.circle.fill")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 30, height: 30)
-                            .foregroundColor(.green)
-                    }
-                    .padding(.leading, 20)
-                    .padding(.top, 20)
-                    Spacer()
-                }
-                
-                Text(lessonName)
-                    .font(.title)
-                    .padding(.top, 20) // Ajustei aqui para alinhar o texto um pouco mais acima
-                    .padding(.horizontal, 20)
-                
-                
-                
-                
-                Button {
-                    state.path.append(1)
-                } label: {
-                    
-                    Image(systemName: "play.fill")
+        VStack {
+            HStack {
+                Button(action: {
+                    self.isShowingPopup = false
+                }) {
+                    Image(systemName: "x.circle.fill")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(width: 50, height: 50)
-                        .foregroundColor(.white)
+                        .frame(width: 30, height: 30)
+                        .foregroundColor(.green)
                 }
-                .padding()
-                .background(Color.green)
-                .clipShape(Circle())
-                
+                .padding(.leading, 20)
+                .padding(.top, 20)
                 Spacer()
             }
-            .frame(width: 300, height: 300)
-            .background(Color.white)
-            .cornerRadius(20)
-            .shadow(radius: 20)
-            .padding(.top, 20) // Outro ajuste para mover todo o conteúdo da VStack um pouco mais para cima
-
-        }
-        .navigationDestination(for: Int.self) { i in
-            switch (lessonName, i) {
-            // Lição 1
-            case ("Lição 1: A batalha pela verdadeira palavra.", 1):
-                L1Desafio1(state: $state)
-            case ("Lição 2: Através de Ditados Populares.", 2):
-                L2Desafio1(state: $state)
-            default:
-                EmptyView()
+            
+            Text(lessonName)
+                .font(.title)
+                .padding(.top, 20)
+                .padding(.horizontal, 20)
+                .onAppear {
+                    updateLicaoID()
+                }
+            
+            // Botões de navegação com NavigationLink
+            if LicaoID == 1 {
+                NavigationLink(destination: L1Desafio1()) {
+                    navigationButton
+                }
+            } else if LicaoID == 2 {
+                NavigationLink(destination: L2Desafio1()) {
+                    navigationButton
+                }
+            } else {
+                Text("Nenhuma lição disponível.")
             }
+            
+            Spacer()
         }
-        
-        
-        // [1, ]
+        .frame(width: 300, height: 300)
+        .background(Color.white)
+        .cornerRadius(20)
+        .shadow(radius: 20)
+        .padding(.top, 20)
+    }
+    
+    // Botão de navegação reutilizável
+    var navigationButton: some View {
+        Image(systemName: "play.fill")
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(width: 50, height: 50)
+            .foregroundColor(.white)
+            .padding()
+            .background(Color.green)
+            .clipShape(Circle())
+    }
+    
+    // Função para atualizar o LicaoID com base no nome da lição
+    func updateLicaoID() {
+        if lessonName == "Lição 1: A batalha pela verdadeira palavra." {
+            LicaoID = 1
+        } else if lessonName == "Lição 2: Através de Ditados Populares." {
+            LicaoID = 2
+        } else {
+            LicaoID = 0
+        }
     }
 }
+
+
 
 #Preview {
     TabView {
