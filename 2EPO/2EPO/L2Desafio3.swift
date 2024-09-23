@@ -126,14 +126,16 @@ struct L2Desafio3: View {
                             showingCorrectSheet = false
                             navigateToNextScreen = true
                         })
+                        .presentationDetents([.fraction(0.25)])
                     }
                     .sheet(isPresented: $showingIncorrectSheet) {
                         CustomSheetViewFalse(onDismiss: {
                             showingIncorrectSheet = false
                             navigateToNextScreen = true
                         })
+                        .presentationDetents([.fraction(0.25)])
                     }
-                    .presentationDetents([.fraction(0.25)])
+                    
                 }
 
                 NavigationLink(destination: L2Desafio4(), isActive: $navigateToNextScreen) {

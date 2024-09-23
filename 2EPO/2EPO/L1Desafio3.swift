@@ -69,9 +69,11 @@ struct L1Desafio3: View {
                         ForEach(0..<4, id: \.self) { index in
                             Button(action: {
                                 selectedOption = textForIndex(index)
-                                isCorrect = selectedOption == respostacerta
-                                showingSheet = true
-                            }) {
+                                if selectedOption == respostacerta {
+                                    showingCorrectSheet = true
+                                } else {
+                                    showingIncorrectSheet = true
+                                }                            }) {
                                 Text(textForIndex(index))
                                     .font(.system(size: 15))
                                     .foregroundColor(.black)
@@ -119,24 +121,23 @@ struct L1Desafio3: View {
             }
             
             // Corrigindo a exibição das sheets
-            .sheet(isPresented: $showingSheet) {
-                if isCorrect {
-                    CustomSheetViewTrue(onDismiss: {
-                        showingSheet = false
-                        navigateToNextScreen = true
-                    })
-                    .presentationDetents([.fraction(0.25)]) // Define a altura para 25% da tela
-                } else {
-                    CustomSheetViewFalse(onDismiss: {
-                        showingSheet = false
-                        navigateToNextScreen = true
-                    })
-                    .presentationDetents([.fraction(0.25)]) // Define a altura para 25% da tela
-                }
+            .sheet(isPresented: $showingCorrectSheet) {
+                CustomSheetViewTrue(onDismiss: {
+                    showingCorrectSheet = false
+                    navigateToNextScreen = true
+                })
+                .presentationDetents([.fraction(0.25)])
+            }
+            .sheet(isPresented: $showingIncorrectSheet) {
+                CustomSheetViewFalse(onDismiss: {
+                    showingIncorrectSheet = false
+                    navigateToNextScreen = true
+                })
+                .presentationDetents([.fraction(0.25)])
+            }
             }
         }
     }
-}
 
 #Preview {
     L1Desafio3()
