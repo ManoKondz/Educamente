@@ -3,17 +3,15 @@ import AVFoundation
 
 struct L1Desafio1: View {
     
-    //@Binding var state: LessonState
-    
-    @State private var showingSheet = false
+    @State private var showingIncorrectSheet = false
+    @State private var showingCorrectSheet = false
     @State private var isCorrect = false
     @State private var navigateToNextScreen = false
-    @State private var LicaoID = [1]
     
-    private let voiceSynthesizer =  VoiceSynthesizer() // Criando uma instância da classe VoiceSynthesizer
+    private let voiceSynthesizer = VoiceSynthesizer() // Instância da classe VoiceSynthesizer
     
     var body: some View {
-        NavigationStack{
+        NavigationStack {
             ZStack {
                 Color.menu
                     .edgesIgnoringSafeArea(.all)
@@ -49,15 +47,15 @@ struct L1Desafio1: View {
                     
                     HStack(spacing: 20) {
                         Button(action: {
-                            isCorrect = false
-                            showingSheet = true
+                            isCorrect = true
+                            showingCorrectSheet = true
                         }) {
                             VStack {
                                 Image(systemName: "person.3.fill")
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 60, height: 110)
-                                Text("Mões")
+                                Text("Mãos")
                                     .font(.headline)
                                     .padding(.bottom, 10)
                             }
@@ -70,15 +68,15 @@ struct L1Desafio1: View {
                         }
                         
                         Button(action: {
-                            isCorrect = true
-                            showingSheet = true
+                            isCorrect = false
+                            showingIncorrectSheet = true
                         }) {
                             VStack {
                                 Image(systemName: "person.3.fill")
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 60, height: 110)
-                                Text("Mãos")
+                                Text("Mões")
                                     .font(.headline)
                                     .padding(.bottom, 10)
                             }
@@ -106,50 +104,30 @@ struct L1Desafio1: View {
                     .padding(.top, 20)
                 }
                 .padding()
-                
-                .sheet(isPresented: $showingSheet) {
-                    CustomSheetView(isCorrect: isCorrect, onDismiss: {
-                        showingSheet = false
-                        navigateToNextScreen = true
-                    })
-                    .presentationDetents([.fraction(0.25)]) // Ajusta a altura da sheet para 25% da tela
-                    .background(Color.blue) // Define a cor de fundo da sheet
-                }
-                
+            }
+            .sheet(isPresented: $showingCorrectSheet) {
+                CustomSheetViewTrue(onDismiss: {
+                    showingCorrectSheet = false
+                    navigateToNextScreen = true
+                })
+                .presentationDetents([.fraction(0.25)]) // Ajuste correto da altura do sheet
+            }
+            .sheet(isPresented: $showingIncorrectSheet) {
+                CustomSheetViewFalse(onDismiss: {
+                    showingIncorrectSheet = false
+                    navigateToNextScreen = true
+                })
+                .presentationDetents([.fraction(0.25)]) // Ajuste correto da altura do sheet
             }
             
-            NavigationLink(value: navigateToNextScreen)
-                                {
-                                EmptyView()
-                            }
-                                .navigationDestination(isPresented:$navigateToNextScreen){
-                                    L1Desafio2()
-                                }
-            
-            //            .onChange(of: navigateToNextScreen) { newValue in
-            //                if newValue {
-            //                    if isCorrect == false {
-            //                        state.erradas.append(1)
-            //                    }
-            //
-            //                    if state.path.count >= 5 {
-            //
-            //                        if state.erradas.isEmpty {
-            //                            state.path.removeAll()
-            //                        } else {
-            //                            let first = state.erradas.removeFirst()
-            //                            state.path.append(first)
-            //                        }
-            //                    } else {
-            //                        state.path.append(2)
-            //                    }
-            //                }
-            //            }
+            // Navegação para a próxima tela
+            NavigationLink(destination: L1Desafio2(), isActive: $navigateToNextScreen) {
+                EmptyView()
+            }
         }
     }
 }
-    
-    
+
 #Preview {
     L1Desafio1()
 }

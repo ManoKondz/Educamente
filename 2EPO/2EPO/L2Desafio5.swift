@@ -1,25 +1,12 @@
-//
-//  L2Desafio5.swift
-//  2EPO
-//
-//  Created by found on 10/09/24.
-//
 import SwiftUI
 
 struct L2Desafio5: View {
-    
-    //@Binding var state: LessonState
-    
-    @State private var showingPopup = false
+    @State private var showingIncorrectSheet = false
+    @State private var showingCorrectSheet = false
     @State private var selectedOption = ""
     @State private var navigateToNextScreen = false
-    @State private var isCorrect = false
-    @State private var showingSheet = false
-    @State private var respostacerta = "Tudo perde"
-    private let voiceSynthesizer = VoiceSynthesizer()
+    private let respostacerta = "Tudo perde"
 
-    
-    
     func textForIndex(_ index: Int) -> String {
         switch index {
         case 0:
@@ -29,81 +16,67 @@ struct L2Desafio5: View {
         case 2:
             return "Tudo ganha"
         case 3:
-            return "Tudo perde"
+            return respostacerta
         default:
             return ""
         }
     }
-    
+
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.menu // Cor de fundo aplicada a toda a tela
-                    .edgesIgnoringSafeArea(.all) // Garante que a cor preencha toda a tela
-                
+                Color.menu.edgesIgnoringSafeArea(.all)
                 VStack {
-                    HStack {
-                        Spacer()
-                    }
-                    .padding()
-                    
                     // Barra de progresso
                     ZStack(alignment: .leading) {
                         RoundedRectangle(cornerRadius: 60)
                             .fill(Color.barcolor)
-                            .frame(width: 360,height: 25) // Define altura da barra de fundo
-                        
+                            .frame(width: 360, height: 25)
+
                         RoundedRectangle(cornerRadius: 60)
                             .fill(Color.progressBar)
-                            .frame(width: 360, height: 25) // A largura é ajustada com base no progresso
+                            .frame(width: 360, height: 25)
                     }
                     .padding(.horizontal)
-                    
-                    Text("A mamãe começou o provérbio com “quem tudo quer __________”.Como você ajudaria ela a ajudaria ela a completar esse provérbio para ganhar os deliciosos biscoitos ?")
+
+                    Text("A mamãe começou o provérbio com “quem tudo quer __________”. Como você ajudaria ela a completar esse provérbio para ganhar os deliciosos biscoitos?")
                         .foregroundColor(.white)
                         .multilineTextAlignment(.center)
                         .padding()
                         .frame(height: 120)
                         .font(.system(size: 18))
                         .layoutPriority(1)
-                    
-                    VStack{
+
+                    VStack {
                         // Retângulo branco
                         RoundedRectangle(cornerRadius: 20)
                             .fill(Color.white)
                             .frame(width: 300, height: 200)
-                        
-                        
-                        Text("Complete o provérbio !")
+
+                        Text("Complete o provérbio!")
                             .foregroundColor(.white)
                             .padding(.top, 10)
-                        
+
                         // Caixa verde das respostas
                         VStack(spacing: 0) {
                             ForEach(0..<4, id: \.self) { index in
                                 Button(action: {
-                                    // Logica para saber se a resposta escolhida é a certa
-                                    if selectedOption != respostacerta{
-                                        isCorrect = false
-                                    } else{
-                                        isCorrect = true
-                                    }
-                                    showingSheet = true
                                     selectedOption = textForIndex(index)
+                                    if selectedOption == respostacerta {
+                                        showingCorrectSheet = true
+                                    } else {
+                                        showingIncorrectSheet = true
+                                    }
                                 }) {
                                     Text(textForIndex(index))
                                         .font(.headline)
                                         .foregroundColor(.black)
-                                        .multilineTextAlignment(.center) // Usado para ajustar o alinhamento do texto
-//                                        .lineLimit(2) // comando para permitir que o texto ocupe várias linhas
-                                        .minimumScaleFactor(0.9) // Reduz o tamanho do texto conforme
-//                                        .padding(.vertical, 5)
-                                        .frame(height: 40)
+                                        .frame(height: 50)
                                         .frame(maxWidth: .infinity)
                                         .background(Color.botaoOpcao)
                                         .cornerRadius(10)
                                 }
-                                
+
                                 if index < 3 {
                                     Divider()
                                         .background(Color("botões"))
@@ -120,13 +93,10 @@ struct L2Desafio5: View {
                                 )
                         )
                         .padding(.bottom, 20)
-                        
+
                         // Botão de som
                         Button(action: {
                             // Ação do botão de som
-                            voiceSynthesizer.speak("A mamãe começou o provérbio com “quem tudo quer”.Como você ajudaria ela a ajudaria ela a completar esse provérbio para ganhar os deliciosos biscoitos ?")
-                            voiceSynthesizer.speak("Complete o provérbio!")
-
                         }) {
                             Image(systemName: "speaker.wave.2.fill")
                                 .frame(width: 100, height: 50)
@@ -137,108 +107,30 @@ struct L2Desafio5: View {
                         }
                     }
                     .padding()
-                    .sheet(isPresented: $showingSheet) {
-                        CustomSheetView(isCorrect: isCorrect, onDismiss: {
-                            showingSheet = false
+                    .sheet(isPresented: $showingCorrectSheet) {
+                        CustomSheetViewTrue(onDismiss: {
+                            showingCorrectSheet = false
                             navigateToNextScreen = true
                         })
-                        .presentationDetents([.fraction(0.25)]) // Ajusta a altura da sheet para 25% da tela
-                        .background(Color.blue) // Define a cor de fundo da sheet
+                        .presentationDetents([.fraction(0.25)])
                     }
-                    NavigationLink(value: navigateToNextScreen)
-                                        {
-                                        EmptyView()
-                                    }
-                                        .navigationDestination(isPresented:$navigateToNextScreen){
-                                            TrilhaView()
-                                        }
-                    
-//                    .onChange(of: navigateToNextScreen) { newValue in
-//                        if newValue {
-//                            if isCorrect == false {
-//                                state.erradas.append(1)
-//                            }
-//                            
-//                            // VOLTAR PARA QUESTOES ERRADAS
-//                            if state.path.count >= 5 {
-//                                
-//                                if state.erradas.isEmpty {
-//                                    state.path.removeAll()
-//                                } else {
-//                                    // PEGA A PRIMEIRA LIÇÃO ERRADA E REMOVE DAS ERRADAS
-//                                    let first = state.erradas.removeFirst()
-//                                    state.path.append(first)
-//                                }
-//                            } else {
-//                                // VAI PARA PROXIMA LICAO
-//                                state.path.append(2)
-//                            }
-//                        }
-//                    }
+                    .sheet(isPresented: $showingIncorrectSheet) {
+                        CustomSheetViewFalse(onDismiss: {
+                            showingIncorrectSheet = false
+                            navigateToNextScreen = true
+                        })
+                        .presentationDetents([.fraction(0.25)])
+                    }
                     
                 }
+            }
+            .navigationDestination(isPresented: $navigateToNextScreen) {
+                TrilhaView()
             }
         }
     }
 }
-struct CustomPopupView10: View {
-    var isCorrect: Bool
-    @Binding var showing: Bool
-    @Binding var navigateToNextScreen: Bool
-    private let voiceSynthesizer = VoiceSynthesizer()
 
-    
-    var body: some View {
-        if showing {
-            VStack {
-                HStack {
-                    Image(systemName: isCorrect ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
-                        .resizable()
-                        .frame(width: 30, height: 30)
-                        .foregroundColor(.white)
-                    
-                    VStack(alignment: .leading) {
-                        Text(isCorrect ? "Excelente! Parabéns!" : "Ops... Na próxima dá certo")
-                            .foregroundColor(.white)
-                            .font(.headline)
-                    }
-                    
-                    Spacer()
-                    
-                    Button(action: {
-                        voiceSynthesizer.speak(isCorrect ? "Excelente! Parabéns!" : "Ôpis... Na próxima dá certo")
-                    }){
-                        Image(systemName: "speaker.wave.3.fill")
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                            .foregroundColor(.white)
-                    }
-                }
-                .padding()
-                .background(Color.blue)
-                .cornerRadius(15)
-                .padding()
-                
-                Button(action: {
-                    showing = false
-                    navigateToNextScreen = true
-                }) {
-                    Image(systemName: "forward.fill")
-                        .resizable()
-                        .frame(width: 40, height: 40)
-                        .foregroundColor(.black)
-                }
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(Color.white)
-                .cornerRadius(15)
-                .padding(.horizontal, 50)
-            }
-            .transition(.move(edge: .bottom))
-            .animation(.easeInOut, value: showing)
-        }
-    }
-}
 #Preview {
     L2Desafio5()
 }
