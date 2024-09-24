@@ -118,9 +118,9 @@ struct CircleIconView: View {
     var body: some View {
         ZStack {
             Circle()
-                .fill(Color.botaoOpcao)
+                .fill(Color.trilhafundobotao)
                 .frame(width: 100, height: 100)
-            Image(systemName: getSystemImageName(index))
+            Image(getAssetName(index))
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 50, height: 50)
@@ -128,16 +128,23 @@ struct CircleIconView: View {
         }
     }
     
-    func getSystemImageName(_ index: Int) -> String {
+    // Esta função retorna o nome do asset com base no índice
+    func getAssetName(_ index: Int) -> String {
         switch index {
         case 0:
-            return "hand.raised.fill"
+            return "BotaoL1Trilha"
         case 1:
-            return "airplane"
+            return "BotaoL2Trilha"
         case 2:
-            return "bus.fill"
+            return "BotaoL3Trilha"
+        case 3:
+            return "BotaoL4Trilha"
+        case 4:
+            return "BotaoL5Trilha"
+        case 5:
+            return "BotaoL6Trilha"
         default:
-            return "circle.fill"
+            return "BotaoL1Trilha" // Valor padrão, pode ajustar conforme necessário
         }
     }
 }
