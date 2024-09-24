@@ -3,14 +3,14 @@ import AVFoundation
 
 struct L1Desafio3: View {
     
-    @Binding var state: LessonState
-    
+    @State private var showingIncorrectSheet = false
+    @State private var showingCorrectSheet = false
     @State private var selectedOption = ""
     @State private var navigateToNextScreen = false
     @State private var isCorrect = false
     @State private var showingSheet = false
     @State private var respostacerta = "Qual seria o plural certo de mão"
-    @State private var LicaoID = [3]
+    
     private let voiceSynthesizer = VoiceSynthesizer()
     
     func textForIndex(_ index: Int) -> String {
@@ -70,12 +70,10 @@ struct L1Desafio3: View {
                             Button(action: {
                                 selectedOption = textForIndex(index)
                                 if selectedOption == respostacerta {
-                                    isCorrect = true
+                                    showingCorrectSheet = true
                                 } else {
-                                    isCorrect = false
-                                }
-                                showingSheet = true
-                            }) {
+                                    showingIncorrectSheet = true
+                                }                            }) {
                                 Text(textForIndex(index))
                                     .font(.system(size: 15))
                                     .foregroundColor(.black)
@@ -116,37 +114,31 @@ struct L1Desafio3: View {
                 }
                 .padding()
             }
-            .onChange(of: navigateToNextScreen) { newValue in
-                if newValue {
-                    if !isCorrect {
-                        state.erradas.append(1)
-                    }
-                    
-                    if state.path.count >= 5 {
-                        if state.erradas.isEmpty {
-                            state.path.removeAll()
-                        } else {
-                            let first = state.erradas.removeFirst()
-                            state.path.append(first)
-                        }
-                    } else {
-                        state.path.append(4)
-                    }
-                }
+            
+            // Navegação para a próxima tela
+            NavigationLink(destination: L1Desafio4(), isActive: $navigateToNextScreen) {
+                EmptyView()
             }
-            .sheet(isPresented: $showingSheet) {
-                CustomSheetView(isCorrect: isCorrect, onDismiss: {
-                    showingSheet = false
+            
+            // Corrigindo a exibição das sheets
+            .sheet(isPresented: $showingCorrectSheet) {
+                CustomSheetViewTrue(onDismiss: {
+                    showingCorrectSheet = false
                     navigateToNextScreen = true
                 })
-                .presentationDetents([.fraction(0.25)]) // Ajusta a altura da sheet para 25% da tela
-                .background(Color.blue) // Define a cor de fundo da sheet
+                .presentationDetents([.fraction(0.25)])
+            }
+            .sheet(isPresented: $showingIncorrectSheet) {
+                CustomSheetViewFalse(onDismiss: {
+                    showingIncorrectSheet = false
+                    navigateToNextScreen = true
+                })
+                .presentationDetents([.fraction(0.25)])
+            }
             }
         }
     }
-    
-}
 
 #Preview {
-    L1Desafio3(state: .constant(.init()))
+    L1Desafio3()
 }
