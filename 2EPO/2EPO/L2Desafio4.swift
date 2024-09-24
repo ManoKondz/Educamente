@@ -61,8 +61,8 @@ struct L2Desafio4: View {
                         .font(.system(size: 18))
 
                     VStack {
-                        RoundedRectangle(cornerRadius: 20)
-                            .fill(Color.white)
+                        Image("L2Desafio4")
+                            .resizable()
                             .frame(width: 300, height: 200)
 
                         Text("Complete o provérbio!")

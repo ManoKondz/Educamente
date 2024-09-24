@@ -55,11 +55,7 @@ struct L1Desafio3: View {
                 VStack {
                     Image("L1Desafio3")
                         .resizable()
-                        .scaledToFit()
-                        .frame(width: 250, height: 200)
-                        .padding()
-                        .cornerRadius(200)
-                        .foregroundColor(.black)
+                        .frame(width: 300, height: 200)
                     
                     Text("Selecione o slogan mais apropriado.")
                         .foregroundColor(.white)

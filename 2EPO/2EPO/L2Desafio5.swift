@@ -49,8 +49,8 @@ struct L2Desafio5: View {
 
                     VStack {
                         // Retângulo branco
-                        RoundedRectangle(cornerRadius: 20)
-                            .fill(Color.white)
+                        Image("L2Desafio5")
+                            .resizable()
                             .frame(width: 300, height: 200)
 
                         Text("Complete o provérbio!")
